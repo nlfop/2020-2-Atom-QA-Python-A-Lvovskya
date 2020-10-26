@@ -1,0 +1,175 @@
+#!/bin/bash
+cat /home/centoslive/Downloads/ac
+var_error=$(echo $?)
+if [ $var_error -ne 0 ]; then
+	echo "Error with opening file"
+fi
+cat /home/centoslive/Downloads/acc |wc -l »file.txt
+echo -n "GET-" »file.txt
+cat /home/centoslive/Downloads/acc | grep GET | wc -l »file.txt
+echo -n "POST-" »file.txt
+cat /home/centoslive/Downloads/acc | grep POST | wc -l »file.txt
+echo -n "HEAD-" »file.txt
+cat /home/centoslive/Downloads/acc | grep HEAD | wc -l »file.txt
+var1=$(cat /home/centoslive/Downloads/acc| wc -l)
+
+a=0
+top_len=(0 0 0 0 0 0 0 0 0 0)
+top_len_counter=(0 0 0 0 0 0 0 0 0 0)
+
+while [ $a -lt 10 ]
+	do
+	x=1
+	while [ $x -le $var1 ]
+		do
+		a1=$(sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $10}')
+		x=$(($x+1))
+		len=$a1
+
+		if [ $len -gt ${top_len[ $a ]} ]; then
+			if [ $a -ne 0 ]; then
+				if [ $len -lt ${top_len[$a-1]} ]; then
+					top_len[$a]=$len
+				fi
+			else
+				top_len[$a]=$len
+
+			fi
+		fi
+
+		done
+	a=$(($a + 1))
+
+	done
+x=1
+while [ $x -le $var1 ]
+	do
+		a2=$(sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $10}')
+		x=$(($x+1))
+		for b in 0 1 2 3 4 5 6 7 8 9
+			do
+				if [ $a2 -eq ${top_len[$b]} ]; then
+					top_len_counter[$b]=$((${top_len_counter[$b]}+1))
+					sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $7,$9,$10}'»file.txt
+				fi
+			done
+	done
+for b in 0 1 2 3 4 5 6 7 8 9
+	do
+		echo -n "number of requests: " »file.txt
+		echo -n ${top_len[$b]} »file.txt
+		echo -n " = " »file.txt
+		echo ${top_len_counter[$b]} »file.txt
+	done
+
+a=0
+top_len_client=(0 0 0 0 0 0 0 0 0 0)
+top_len_counter_client=(0 0 0 0 0 0 0 0 0 0)
+
+while [ $a -lt 10 ]
+	do
+		x=1
+		while [ $x -le $var1 ]
+			do
+				request=$(sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $9}')
+				if [ $request -lt 410 ] && [ $request -ge 400 ]; then
+					a1=$(sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $10}')
+					x=$(($x+1))
+					len=$a1
+
+					if [ $len -gt ${top_len_client[ $a ]} ]; then
+						if [ $a -ne 0 ]; then
+							if [ $len -lt ${top_len_client[$a-1]} ]; then
+								top_len_client[$a]=$len
+							fi
+						else
+							top_len_client[$a]=$len
+
+						fi
+					fi
+				fi
+
+			done
+	a=$(($a + 1))
+
+	done
+x=1
+while [ $x -le $var1 ]
+	do
+		request=$(sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $9}')
+		if [ $request -lt 410 ] && [ $request -ge 400 ]; then
+			a2=$(sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $10}')
+			x=$(($x+1))
+			for b in 0 1 2 3 4 5 6 7 8 9
+				do
+					if [ $a2 -eq ${top_len_client[$b]} ]; then
+						top_len_counter_client[$b]=$((${top_len_counter_client[$b]}+1))
+						sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $1,$7,$9}'»file.txt
+					fi
+				done
+		fi
+	done
+for b in 0 1 2 3 4 5 6 7 8 9
+	do
+		echo -n "number of requests: " »file.txt
+		echo -n ${top_len_client[$b]} »file.txt
+		echo -n " = " »file.txt
+		echo ${top_len_counter_client[$b]} »file.txt
+	done
+
+a=0
+top_len_server=(0 0 0 0 0 0 0 0 0 0)
+top_len_counter_server=(0 0 0 0 0 0 0 0 0 0)
+
+while [ $a -lt 10 ]
+	do
+		x=1
+		while [ $x -le $var1 ]
+			do
+				request=$(sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $9}')
+				if [ $request -lt 600 ] && [ $request -ge 500 ]; then
+					a1=$(sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $10}')
+					x=$(($x+1))
+					len=$a1
+
+					if [ $len -gt ${top_len_server[ $a ]} ]; then
+						if [ $a -ne 0 ]; then
+							if [ $len -lt ${top_len_server[$a-1]} ]; then
+								top_len_server[$a]=$len
+							fi
+						else
+							top_len_server[$a]=$len
+
+						fi
+					fi
+				fi
+
+			done
+		a=$(($a + 1))
+
+	done
+x=1
+while [ $x -le $var1 ]
+
+	do
+		request=$(sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $9}')
+		if [ $request -lt 600 ] && [ $request -ge 500 ]; then
+			a2=$(sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $10}')
+			x=$(($x+1))
+			for b in 0 1 2 3 4 5 6 7 8 9
+				do
+					if [ $a2 -eq ${top_len_server[$b]} ]; then
+						top_len_counter_server[$b]=$((${top_len_counter_server[$b]}+1))
+						sed -n "${x}p" /home/centoslive/Downloads/acc| awk '{print $1,$7,$9}'»file.txt
+					fi
+				done
+		fi
+	done
+for b in 0 1 2 3 4 5 6 7 8 9
+	do
+		echo -n "number of requests: " »file.txt
+		echo -n ${top_len_server[$b]} »file.txt
+		echo -n " = " »file.txt
+		echo ${top_len_counter_server[$b]} »file.txt
+
+	done
