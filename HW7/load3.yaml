@@ -1,0 +1,22 @@
+overload:
+  enabled: true
+  token_file: /var/loadtest/token.txt
+  package: yandextank.plugins.DataUploader
+  job_name: test_nlfop_lin
+  job_dsc: test_qa_nlfop_lin
+phantom:
+  enabled: true
+  address: 172.17.0.1:5556
+  ammofile: /var/loadtest/ammo.txt
+  load_profile:
+    load_type: rps
+    schedule: step(1,10,1,6)
+console:
+  enabled: false
+telegraf:
+  enabled: false
+  package: yandextank.plugins.Telegraf
+  config: /var/loadtest/monitoring.xml
+rcheck:
+  disk_limit: 500
+  mem_limit: 50
